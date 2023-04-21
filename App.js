@@ -2,7 +2,26 @@ import React from 'react';
 import { StyleSheet, TextInput, SafeAreaView, View, Button, SectionList, Text, Pressable } from 'react-native';
 
 export default function App() {
-  const [text, onChangeText] = React.useState('');
+  const [searchText, onChangeSearchText] = React.useState('');
+
+  // dati falsi "pre-fetch"
+  const DATA = [
+    {
+      title: 'A',
+      data: ['Antonia', 'Ada', 'Alessio']
+    },
+    {
+      title: 'C',
+      data: ['Carlo', 'Cacone']
+    },
+    {
+      title: 'P',
+      data: [
+        'Prof. Chiumento',
+        'Prof. De Bonis',
+      ],
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.globalView}>
@@ -11,47 +30,50 @@ export default function App() {
       <View style={styles.searchView}>
         <TextInput
           style={styles.searchInput}
-          onChangeText={onChangeText}
+          onChangeText={onChangeSearchText}
           placeholder='Ricerca contatti...'
-          value={text}
+          value={searchText}
         />
         <Button
-          title='Cerca'
-          style={styles.searchButton}
-          onPress={() => {alert(`premuto tasto ricerca con ${text}`)}}
+          title='Nuovo'
+          style={styles.createButton}
+          onPress={() => { alert(`premuto tasto ricerca con ${text}`) }}
         />
       </View>
 
       <View style={styles.contactsView}>
         <SectionList
-          sections={[
-            {
-              title: 'A',
-              data: ['Antonia', 'Ada', 'Alessio']
-            },
-            {
-              title: 'C',
-              data: ['Carlo', 'Cacone']
-            },
-            {
-              title: 'P',
-              data: [
-                'Prof. Chiumento',
-                'Prof. De Bonis',
-              ],
-            },
-          ]}
+          sections={DATA}
           renderItem={
-            ({ item }) => (
-              <Pressable onPress={() => {alert(`hai cliccato su ${item}`)}}>
-                <Text style={styles.sectionItem}>{item}</Text>
-              </Pressable>
-            )
+            ({ item }) => {
+              if (item.toLowerCase().includes(searchText.toLowerCase())) {
+                return (
+                  <Pressable onPress={() => { alert(`hai cliccato su ${item}`) }}>
+                    <Text style={styles.sectionItem}>{item}</Text>
+                  </Pressable>
+                )
+              }
+            }
           }
-          renderSectionHeader={({ section }) => (
-            <Text style={styles.sectionHeader}>{section.title}</Text>
-          )}
+          renderSectionHeader={({ section }) => {
+            let found = false;
+            section.data.forEach((item) => {
+              if (item.toLowerCase().includes(searchText.toLowerCase())) found = true;
+            })
+            if (found) return (<Text style={styles.sectionHeader}>{section.title}</Text>)
+          }}
           keyExtractor={item => `le-${item}`}
+          ListHeaderComponent={() => {
+            if (searchText != "") {
+              let found = false;
+              DATA.forEach((subsection) => {
+                  subsection.data.forEach((item) => {
+                    if (item.toLowerCase().includes(searchText.toLowerCase())) found = true;
+                  })
+              })
+              if(!found) return (<Text style={styles.noResultFound}>Nessun risultato trovato</Text>)
+            }
+          }}
         />
       </View>
     </SafeAreaView>
@@ -81,7 +103,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     flex: 2
   },
-  searchButton: {
+  createButton: {
     flex: 1,
   },
   searchView: {
@@ -104,5 +126,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     height: 44,
   },
+  noResultFound: {
+    textAlign: 'center',
+    marginTop: 7,
+    color: 'gray'
+  }
 
 });
