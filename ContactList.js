@@ -8,18 +8,24 @@ import uuid from 'react-native-uuid';
 const ContactList = ({ navigation }) => {
   const [searchText, onChangeSearchText] = React.useState('');
   let [listData, onChangeListData] = React.useState([]);
+  const [contactNumber, onChangeContactNumber] = React.useState(0);
 
   const isFocused = useIsFocused()
 
   React.useEffect(() => {
     getContactsList().then((value) => {
-      onChangeListData(value)
+      onChangeListData(value);
+      let count = 0;
+      value.forEach((sub) => {
+        sub.data.forEach(() => count++);
+      })
+      onChangeContactNumber(count);
     });
   }, [isFocused]);
 
   const BottomMessage = (props) => {
     if (props.render) {
-      return (<Text style={styles.appSubtitle}>Sono memorizzati {listData.length} contatti</Text>)
+      return (<Text style={styles.appSubtitle}>Sono memorizzati {contactNumber} contatti</Text>)
     }
   }
 
