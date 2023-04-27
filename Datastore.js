@@ -1,27 +1,46 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 
+// i try catch fermano gli errori per poi debuggare in console
+
 const getContactData = async (key) => {
     try {
+        // fai una query al datastore per la chiave dell'elemento ricercato
         const jsonValue = await AsyncStorage.getItem(key)
         return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (error) {
         console.error("GET: ",error);
     }
 }
-
+/*
+    a partire dagli elementi JSON nel datastore genera un array del tipo
+    [
+        {
+            title: "INIZIALE"
+            data: [
+                {key: UUID, value: NOMECOGNOME},
+                ....
+            ]
+        },
+        ....
+    ]
+*/
 const getContactsList = async () => {
+    // prendi tutte le chiavi del datastore di RN
     const keyList = await AsyncStorage.getAllKeys()
-    let finalArray = [];
+    let finalArray = []; // crea un array vuoto
     // per tutte le chiavi in lista
     for (const key of keyList){
         try {
+            // controlla che la entry sia stata prodotta dalla nostra app
             if (key.startsWith("@cac_uuid:")) {
+                // fetch di quella key
                 const value = await AsyncStorage.getItem(key);
                 if (value){
+                    // trasforma il valore di quella key da stringa JSON a un oggetto
                     const actualValue = JSON.parse(value);
-                    //console.log("sto elaborando ", actualValue.name)
                     let found = false;
+                    // prima di aggiungere all'arra
                     finalArray.forEach((element) => {
                         // controlla se esiste gia lettera dell'alfabeto
                         if (element.title == actualValue.name.toUpperCase()[0] && !found) {
@@ -45,11 +64,13 @@ const getContactsList = async () => {
             console.error("GETALL: ",error);
         }
     }
-    //ottieni array finale ordinando alfabeticamente per 'title'
+    //ottieni array finale ordinando alfabeticamente per 'title' (vedi struttura di sopra)
     return finalArray.sort((a, b) => a.title.localeCompare(b.title));;
 }
 
+// aggiunta del contatto
 const addContactToList = async (name, birthday, address, phone) => {
+    // prepara la struttura dati
     const data = {
         name: name,
         birthday: birthday,
@@ -57,6 +78,7 @@ const addContactToList = async (name, birthday, address, phone) => {
         phone: phone
     }
     try {
+        // genera uuid random e memorizza nel datastore
         await AsyncStorage.setItem(
             "@cac_uuid:" + uuid.v4(), // un uuid random evita ogni collisione
             JSON.stringify(data)
@@ -68,6 +90,7 @@ const addContactToList = async (name, birthday, address, phone) => {
     }
 }
 
+// funziona tale e quale all'add ma chiede la chiave di chi esiste già
 const editContact = async (key, name, birthday, address, phone) => {
     const data = {
         name: name,
@@ -92,6 +115,7 @@ const editContact = async (key, name, birthday, address, phone) => {
     }
 }
 
+// data una chiave cancella il contatto, controlla prima se esiste
 const deleteContact = async (key) => {
     try {
         const existing = await AsyncStorage.getItem(key);
@@ -107,6 +131,7 @@ const deleteContact = async (key) => {
     }
 }
 
+// cancella tutti i contatti (utilizzata solo in fase di debug)
 const clearAllData = async () => {
     const keyList = await AsyncStorage.getAllKeys()
     // per tutte le chiavi in lista

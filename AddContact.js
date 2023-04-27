@@ -6,11 +6,13 @@ import CaAvatar from './CaAvatar';
 
 const AddContact = ({ navigation }) => {
 
+  // variabili di stato
   const [name, onChangeName] = React.useState('');
   const [birthday, onChangeBirthday] = React.useState();
   const [address, onChangeAddress] = React.useState('');
   const [phone, onChangePhone] = React.useState('');
 
+  // se la data non è selezionata metti il testo placeholder
   const handleBdText = () => birthday
     ? birthday.toDateString()
     : "Data di Nascita";

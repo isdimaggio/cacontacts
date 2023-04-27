@@ -6,7 +6,14 @@ import { View } from 'react-native';
 
 const CaAvatar = ({ size, uid, name }) => {
 
-	/*function generateRandomNumber(str, max) {
+	/* 
+	   questa funzione genera un colore pseudo-randomico per ogni avatar.
+	   per ogni uuid dato viene generato sempre lo stesso colore.
+	   non funziona perchè l'implementazione di random su react 
+	   native non prevede "seed stringhe"
+	*/
+	
+	function generateRandomNumber(str, max) {
 		// Use the string as a seed for the random function
 		var seed = 0;
 		for (var i = 0; i < str.length; i++) {
@@ -20,6 +27,7 @@ const CaAvatar = ({ size, uid, name }) => {
 		return randomNumber;
 	}
 
+	// lista colori da cui scegliere
 	const colorList = [
 		"#403F4C",
 		"#E84855",
@@ -30,8 +38,8 @@ const CaAvatar = ({ size, uid, name }) => {
 
 	// genera un numero randomico usando lo uid del contatto come seed 
 	// per ottenere sempre lo stesso colore con lo stesso uid
-	const pickedColor = colorList[generateRandomNumber(uid, colorList.length)]
-	*/
+	
+	//const pickedColor = colorList[generateRandomNumber(uid, colorList.length)]
 
 	const pickedColor = "#C7C7CC"; // usa sempre lo stesso colore (per ora)
 

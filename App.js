@@ -7,6 +7,8 @@ import ViewEditContact from './ViewEditContact';
 
 const Stack = createNativeStackNavigator();
 
+// view router, tramite un componente e degli stati 
+// decide che pagina renderizzare e con che parametri
 export default function App() {
   return (
     <NavigationContainer>

@@ -16,6 +16,8 @@ const ViewEditContact = ({ navigation, route }) => {
     ? birthday.toDateString()
     : "Data di Nascita";
 
+  // al load della pagina (useEffect) fa richiesta async al datastore per quella key
+  // e riempie tutti i campi con le variabili di stato
   React.useEffect(() => {
     getContactData(route.params.uid).then((value) => {
       onChangeName(value.name);
@@ -157,7 +159,7 @@ const styles = StyleSheet.create({
     color: '#bdbdbd'
   },
   contentContainer: {
-    flex: 1 // pushes the footer to the end of the screen
+    flex: 1  // footer a fine schermo
   },
   footer: {
       height: 20
