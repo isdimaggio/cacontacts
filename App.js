@@ -17,7 +17,7 @@ export default function App() {
         <Stack.Screen
           name="ContactList"
           component={ContactList}
-          options={{ title: 'Lista Contatti' }}
+          options={{ title: 'CaContatti' }}
         />
         <Stack.Screen
           name="AddContact"

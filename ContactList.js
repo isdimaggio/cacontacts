@@ -3,7 +3,6 @@ import { StyleSheet, TextInput, SafeAreaView, View, Button, SectionList, Text, P
 import { getContactsList } from './Datastore';
 import { useIsFocused } from '@react-navigation/native'
 import CaAvatar from './CaAvatar';
-import uuid from 'react-native-uuid';
 
 const ContactList = ({ navigation }) => {
   const [searchText, onChangeSearchText] = React.useState('');
